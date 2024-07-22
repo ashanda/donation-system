@@ -1,10 +1,8 @@
 <?php
+namespace App\Http\Controllers;
 
-namespace 
- App\Http\Controllers;
-
+use App\Models\Role;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 
@@ -16,12 +14,14 @@ class RoleController extends Controller
         $this->middleware('permission:create role', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
         $this->middleware('permission:update role', ['only' => ['update','edit']]);
         $this->middleware('permission:delete role', ['only' => ['destroy']]);
+        $this->middleware('permission:force delete role', ['only' => ['forceDelete']]);
     }
 
     public function index()
     {
-        $roles = Role::get();
-        return view('role-permission.role.index', ['roles' => $roles]);
+        $roles = Role::all();
+        
+        return view('role-permission.role.index', compact('roles'));
     }
 
     public function create()
@@ -72,19 +72,42 @@ class RoleController extends Controller
 
     public function destroy($roleId)
     {
-        $role = Role::find($roleId);
-        $role->delete();
-        return redirect('roles')->with('status','Role Deleted Successfully');
+        $role = Role::findOrFail($roleId);
+        $role->delete(); // This should soft delete the role
+
+        return redirect('roles')->with('status', 'Role Deleted Successfully');
     }
 
+    public function restoreAll()
+    {   $roles = Role::all();
+        $deletedRoles = Role::onlyTrashed()->get();
+        
+        return view('role-permission.role.restore', compact('roles','deletedRoles'));
+    }
+
+    public function restore($roleId)
+    {
+        $role = Role::withTrashed()->findOrFail($roleId);
+        $role->restore();
+
+        return redirect('roles')->with('status', 'Role Restored Successfully');
+    }
+
+     public function forceDelete($roleId)
+    {
+        $role = Role::withTrashed()->findOrFail($roleId);
+        $role->forceDelete(); // Permanently delete
+
+        return redirect()->route('roles.index')->with('status', 'Role Permanently Deleted Successfully');
+    }
     public function addPermissionToRole($roleId)
     {
-        $permissions = Permission::get();
+        $permissions = Permission::all();
         $role = Role::findOrFail($roleId);
         $rolePermissions = DB::table('role_has_permissions')
-                                ->where('role_has_permissions.role_id', $role->id)
-                                ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
-                                ->all();
+                                   ->where('role_has_permissions.role_id', $role->id)
+                                   ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+                                   ->all();
 
         return view('role-permission.role.add-permissions', [
             'role' => $role,

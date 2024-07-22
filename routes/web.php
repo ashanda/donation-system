@@ -1,6 +1,12 @@
 <?php
 
+use App\Http\Controllers\DonatorController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,15 +38,38 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
-    Route::resource('permissions', App\Http\Controllers\PermissionController::class);
-    Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermissionController::class, 'destroy']);
+   
+    Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
+    Route::get('permissions/restore', [PermissionController::class, 'restoreAll'])->name('permissions.restoreAll');
+    Route::patch('permissions/{permissionId}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
+    Route::delete('permissions/{permissionId}/force-delete', [PermissionController::class, 'forceDelete'])->name('permissions.forceDelete');
+    Route::resource('permissions', PermissionController::class);
 
-    Route::resource('roles', App\Http\Controllers\RoleController::class);
-    Route::get('roles/{roleId}/delete', [App\Http\Controllers\RoleController::class, 'destroy']);
-    Route::get('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'addPermissionToRole']);
-    Route::put('roles/{roleId}/give-permissions', [App\Http\Controllers\RoleController::class, 'givePermissionToRole']);
+    
+    Route::get('roles/{roleId}/delete', [RoleController::class, 'destroy']);
+    Route::delete('roles/{roleId}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
+    Route::get('roles/restore', [RoleController::class, 'restoreAll'])->name('roles.restoreAll');
+    Route::get('roles/{roleId}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::get('roles/{roleId}/give-permissions', [RoleController::class, 'addPermissionToRole']);
+    Route::put('roles/{roleId}/give-permissions', [RoleController::class, 'givePermissionToRole']);
+    Route::resource('roles', RoleController::class);
 
-    Route::resource('users', App\Http\Controllers\UserController::class);
-    Route::get('users/{userId}/delete', [App\Http\Controllers\UserController::class, 'destroy']);
+    Route::resource('users', UserController::class);
+    Route::get('users/{userId}/delete', [UserController::class, 'destroy']);
+
+    Route::get('products/{productsId}/delete', [ProductController::class, 'destroy']);
+    Route::get('products/restore', [ProductController::class, 'restoreItems'])->name('products.restoreItems');
+    Route::delete('products/{id}/force-delete', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
+    Route::post('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+    Route::resource('products', ProductController::class);
+
+    Route::get('inventories/{inventoriesId}/delete', [InventoryController::class, 'destroy']);
+    Route::get('inventories/restore', [InventoryController::class, 'restoreItems'])->name('inventories.restoreItems');
+    Route::delete('inventories/{id}/force-delete', [InventoryController::class, 'forceDelete'])->name('inventories.forceDelete');
+    Route::post('inventories/{id}/restore', [InventoryController::class, 'restore'])->name('inventories.restore');
+    Route::resource('inventories', InventoryController::class);
+
+    Route::resource('donator', DonatorController::class);
+    Route::get('donator/{donatorId}/delete', [DonatorController::class, 'destroy']);
 
 });

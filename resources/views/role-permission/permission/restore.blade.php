@@ -19,9 +19,6 @@
                             @can('create permission')
                             <a href="{{ url('permissions/create') }}" class="btn btn-primary float-end">Add Permission</a>
                             @endcan
-                             @can('restore permission')
-                            <a href="{{ route('permissions.restoreAll') }}" class="btn btn-info float-end">Restore Permission</a>
-                            @endcan
                         </h4>
                     </div>
                     <div class="card-body">
@@ -35,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($permissions as $permission)
+                                @foreach ($deletedPermission as $permission)
                                 <tr>
                                     <td>{{ $permission->id }}</td>
                                     <td>{{ $permission->name }}</td>
