@@ -21,6 +21,10 @@
                             @can('create role')
                             <a href="{{ url('roles/create') }}" class="btn btn-primary float-end">Add Role</a>
                             @endcan
+
+                             @can('restore user')
+                            <a href="{{ route('roles.restoreAll') }}" class="btn btn-info float-end">Restore role</a>
+                            @endcan
                         </h4>
                     </div>
                     <div class="card-body">
@@ -51,7 +55,7 @@
                                         
                                         @can('delete role')
                                         @if ($role->id != 1)
-                                        <a href="{{ url('roles/'.$role->id.'/delete') }}" class="btn btn-danger mx-2">
+                                        <a href="{{ url('roles/'.$role->id.'/delete') }}" class="btn btn-danger mx-2 delete-button">
                                             Delete
                                         </a>
                                         @endif

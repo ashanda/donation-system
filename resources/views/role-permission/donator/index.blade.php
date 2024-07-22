@@ -15,15 +15,11 @@
 
                 <div class="card mt-3">
                     <div class="card-header">
-                        <h4>Users
+                        <h4>Doneators
                             @can('create user')
                             <a href="{{ url('users/create') }}" class="btn btn-primary float-end">Add User</a>
                             @endcan
-                           
                         </h4>
-
-                        
-                        
                     </div>
                     <div class="card-body">
 

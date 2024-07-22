@@ -53,12 +53,14 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('assets-main/js/config.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
+        @include('sweetalert::alert')
         @include('layouts.side-bar')
          <div class="layout-page">
         @include('layouts.navigation')
@@ -68,6 +70,7 @@
 
             <!-- Page Content -->
            <div class="content-wrapper">
+               
                 @yield('content')
            </div>
        </div>
@@ -102,5 +105,7 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="{{ asset('assets-main/js/confirmDelete.js') }}"></script>
+    @yield('script')
   </body>
 </html>
