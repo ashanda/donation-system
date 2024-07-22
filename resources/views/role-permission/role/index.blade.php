@@ -1,12 +1,12 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('content')
 
     <div class="container mt-5">
-        <a href="{{ url('roles') }}" class="btn btn-primary mx-1">Roles</a>
-        <a href="{{ url('permissions') }}" class="btn btn-info mx-1">Permissions</a>
-        <a href="{{ url('users') }}" class="btn btn-warning mx-1">Users</a>
-    </div>
+        
+    
 
-    <div class="container mt-2">
+    
         <div class="row">
             <div class="col-md-12">
 
@@ -48,11 +48,13 @@
                                             Edit
                                         </a>
                                         @endcan
-
+                                        
                                         @can('delete role')
+                                        @if ($role->id != 1)
                                         <a href="{{ url('roles/'.$role->id.'/delete') }}" class="btn btn-danger mx-2">
                                             Delete
                                         </a>
+                                        @endif
                                         @endcan
                                     </td>
                                 </tr>
@@ -61,9 +63,8 @@
                         </table>
 
                     </div>
-                </div>
-            </div>
+               
         </div>
     </div>
 
-</x-app-layout>
+@endsection
