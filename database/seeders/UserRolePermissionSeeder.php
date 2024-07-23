@@ -66,6 +66,8 @@ class UserRolePermissionSeeder extends Seeder
             'manage donators',
             'manage issuers',
             'manage products',
+
+            'role permission'
         ];
 
         // Create permissions
