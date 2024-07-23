@@ -93,17 +93,17 @@ class InventoryController extends Controller
 
     public function forceDelete($id)
         {
-            dd($id);
-            // try {
-            //     $inventory = Inventory::withTrashed()->findOrFail($id); // Find inventory instead of product
-            //     $inventory->forceDelete();
-            //     Alert::toast('Inventory permanently deleted', 'success');
-            // } catch (ModelNotFoundException $e) {
-            //     Alert::toast('Inventory not found', 'error');
-            // } catch (\Exception $e) {
-            //     Alert::toast('Failed to permanently delete inventory: ' . $e->getMessage(), 'error');
-            // }
-            // return redirect()->route('inventories.index');
+            
+            try {
+                $inventory = Inventory::withTrashed()->findOrFail($id); // Find inventory instead of product
+                $inventory->forceDelete();
+                Alert::toast('Inventory permanently deleted', 'success');
+            } catch (ModelNotFoundException $e) {
+                Alert::toast('Inventory not found', 'error');
+            } catch (\Exception $e) {
+                Alert::toast('Failed to permanently delete inventory: ' . $e->getMessage(), 'error');
+            }
+            return redirect()->route('inventories.index');
         }
 
     public function restore($id)
