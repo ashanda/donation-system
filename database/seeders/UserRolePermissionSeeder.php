@@ -94,6 +94,16 @@ class UserRolePermissionSeeder extends Seeder
             'create product', 'view product', 'update product'
         ]);
 
+        $donatorRole->syncPermissions([
+            'manage donators', 'create donate', 'create donation',
+            'edit / update donation items'
+        ]);
+
+        $issuerRole->syncPermissions([
+            'manage issuers', 'create issue', 'edit / update good issue',
+            'create good issue'
+        ]);
+
         // Create users and assign roles
         $superAdminUser = User::firstOrCreate(
             ['email' => 'superadmin@gmail.com'],
