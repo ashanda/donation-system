@@ -17,58 +17,59 @@ class UserRolePermissionSeeder extends Seeder
     public function run(): void
     {
         // Define all permissions
-        $permissions = [
-            'view role',
-            'create role',
-            'update role',
-            'delete role',
-            'restore role',
+       $permissions = [
+    'view role',
+    'create role',
+    'update role',
+    'delete role',
+    'restore role',
 
-            'view permission',
-            'create permission',
-            'update permission',
-            'delete permission',
-            'restore permission',
+    'view permission',
+    'create permission',
+    'update permission',
+    'delete permission',
+    'restore permission',
 
-            'view user',
-            'create user',
-            'update user',
-            'delete user',
-            'manage users',
+    'view user',
+    'create user',
+    'update user',
+    'delete user',
+    'manage users',
 
-            'view product',
-            'create product',
-            'update product',
-            'delete product',
-            'restore product',
+    'view product',
+    'create product',
+    'update product',
+    'delete product',
+    'restore product',
 
-            'view inventory item',
-            'add inventory',
-            'edit / update inventory items',
-            'delete inventory item',
-            'restore inventory iteams',
-            'manage inventory',
+    'view inventory item',
+    'add inventory',
+    'edit / update inventory items',
+    'delete inventory item',
+    'restore inventory items',
+    'manage inventory',
 
-            'create donate',
-            'update donate',
-            'delete donate',
-            'edit / update donation items',
-            'delete donation items',
-            'create donation',
+    'create donate',
+    'update donate',
+    'delete donate',
+    'edit / update donation items',
+    'delete donation items',
+    'create donation',
 
-            'create issue',
-            'update issue',
-            'delete issue',
-            'create good issue',
-            'edit / update good issue',
-            'delete good issue',
+    'create issue',
+    'update issue',
+    'delete issue',
+    'create good issue',
+    'edit / update good issue',
+    'delete good issue',
 
-            'manage donators',
-            'manage issuers',
-            'manage products',
+    'manage donators',
+    'manage issuers',
+    'manage products',
 
-            'role permission'
-        ];
+    'role permission'
+];
+
 
         // Create permissions
         foreach ($permissions as $permission) {
