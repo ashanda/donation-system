@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DonatorController;
 use App\Http\Controllers\GoodIssueController;
@@ -23,12 +23,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -71,18 +69,20 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
     Route::post('inventories/{id}/restore', [InventoryController::class, 'restore'])->name('inventories.restore');
     Route::resource('inventories', InventoryController::class);
 
-    Route::resource('donator', DonatorController::class);
-    Route::get('donator/{donatorId}/delete', [DonatorController::class, 'destroy']);
+    
 
 });
 
 
 Route::group(['middleware' => ['role:super-admin|admin|donator']], function() {
+    
     Route::get('/donate', [DonationController::class, 'create'])->name('donate.form');
     Route::post('/donate', [DonationController::class, 'store'])->name('donate');
+    Route::resource('donations', DonationController::class);
 });
 
-Route::group(['middleware' => ['role:super-admin|admin|donator']], function() {
+Route::group(['middleware' => ['role:super-admin|admin|issuer']], function() {
     Route::get('/issue', [GoodIssueController::class, 'create'])->name('issue.form');
     Route::post('/issue', [GoodIssueController::class, 'store'])->name('issue.store');
+    Route::resource('good-issues', GoodIssueController::class);
 });

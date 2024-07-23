@@ -5,6 +5,7 @@
     <div class="card">
         <div class="card-header">
             <h4>Donate Products</h4>
+            <a href="{{ route('donations.index') }}" class="btn btn-primary float-end">Back</a>
         </div>
         <div class="card-body">
             <form action="{{ route('donate') }}" method="POST">
