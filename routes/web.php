@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DonatorController;
+use App\Http\Controllers\GoodIssueController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -79,4 +80,9 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
 Route::group(['middleware' => ['role:super-admin|admin|donator']], function() {
     Route::get('/donate', [DonationController::class, 'create'])->name('donate.form');
     Route::post('/donate', [DonationController::class, 'store'])->name('donate');
+});
+
+Route::group(['middleware' => ['role:super-admin|admin|donator']], function() {
+    Route::get('/issue', [GoodIssueController::class, 'create'])->name('issue.form');
+    Route::post('/issue', [GoodIssueController::class, 'store'])->name('issue.store');
 });
