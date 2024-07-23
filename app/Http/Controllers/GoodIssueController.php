@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/GoodIssueController.php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -27,9 +25,9 @@ class GoodIssueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'items' => 'required|array',
+            'items' => 'required|array|max:3', // Max 3 different items per entry
             'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1|max:3', // Max 3 items per entry
+            'items.*.quantity' => 'required|integer|min:1', // Valid quantity range for each item
         ]);
 
         $issuerId = Auth::id();
@@ -72,11 +70,10 @@ class GoodIssueController extends Controller
             }
 
             Alert::toast('Goods issued successfully', 'success');
-            return redirect()->route('issuer.index'); 
+            return redirect()->route('issuer.index'); // Redirect to a success page or dashboard
         } catch (\Exception $e) {
             Alert::toast('Failed to issue goods: ' . $e->getMessage(), 'error');
             return redirect()->back();
         }
     }
 }
-
