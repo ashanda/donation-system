@@ -15,7 +15,7 @@
                     <div class="card mt-3">
                         <div class="card-header">
                             <h4>Products
-                                 @can('add product')
+                                 @can('create product')
                                 <a href="{{ route('products.create') }}" class="btn btn-primary float-end ms-2">Create Product</a>
                                  @endcan
                                  @can('restore product')
