@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\DonatorController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PermissionController;
@@ -72,4 +73,10 @@ Route::group(['middleware' => ['role:super-admin|admin']], function() {
     Route::resource('donator', DonatorController::class);
     Route::get('donator/{donatorId}/delete', [DonatorController::class, 'destroy']);
 
+});
+
+
+Route::group(['middleware' => ['role:super-admin|admin|donator']], function() {
+    Route::get('/donate', [DonationController::class, 'create'])->name('donate.form');
+    Route::post('/donate', [DonationController::class, 'store'])->name('donate');
 });
