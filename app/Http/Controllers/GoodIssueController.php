@@ -11,6 +11,31 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class GoodIssueController extends Controller
 {
+    public function index()
+    {
+        try {
+            $user = Auth::user();
+            $roles = $user->getRoleNames();
+
+            // Check if the user is a super-admin or admin
+            if ($roles->contains('super-admin') || $roles->contains('admin')) {
+                // Super-admin and admin can see all issues
+                $issues = GoodIssue::with('product')->get();
+            } elseif ($roles->contains('donator')) {
+                // Donator can only see their own issues
+                $issues = GoodIssue::with('product')->where('issuer_id', $user->id)->get();
+            } else {
+                // Others see no data
+                $issues = collect(); // Return an empty collection
+            }
+
+            return view('role-permission.issuer.index', compact('issues'));
+        } catch (\Exception $e) {
+            Alert::toast('Failed to load issues: ' . $e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
+
     public function create()
     {
         try {
@@ -73,6 +98,63 @@ class GoodIssueController extends Controller
             return redirect()->route('issuer.index'); // Redirect to a success page or dashboard
         } catch (\Exception $e) {
             Alert::toast('Failed to issue goods: ' . $e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function edit(GoodIssue $goodIssue)
+    {
+        try {
+            $products = Product::all();
+            return view('role-permission.issuer.edit', compact('goodIssue', 'products'));
+        } catch (\Exception $e) {
+            Alert::toast('Failed to load issue: ' . $e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function update(Request $request, GoodIssue $goodIssue)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        try {
+            $stock = Inventory::where('product_id', $goodIssue->product_id)->first();
+            $newStockQuantity = $stock->quantity + $goodIssue->quantity - $request->quantity;
+
+            if ($newStockQuantity < 0) {
+                Alert::toast('Not enough stock for the update', 'error');
+                return redirect()->back();
+            }
+
+            $goodIssue->update($request->all());
+
+            $stock->quantity = $newStockQuantity;
+            $stock->save();
+
+            Alert::toast('Good issue updated successfully', 'success');
+            return redirect()->route('good-issues.index');
+        } catch (\Exception $e) {
+            Alert::toast('Failed to update issue: ' . $e->getMessage(), 'error');
+            return redirect()->back();
+        }
+    }
+
+    public function destroy(GoodIssue $goodIssue)
+    {
+        try {
+            $stock = Inventory::where('product_id', $goodIssue->product_id)->first();
+            $stock->quantity += $goodIssue->quantity;
+            $stock->save();
+
+            $goodIssue->delete();
+
+            Alert::toast('Good issue deleted successfully', 'success');
+            return redirect()->route('good-issues.index');
+        } catch (\Exception $e) {
+            Alert::toast('Failed to delete issue: ' . $e->getMessage(), 'error');
             return redirect()->back();
         }
     }

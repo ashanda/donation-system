@@ -24,4 +24,9 @@ class Product extends Model
     {
         return 'PROD-' . strtoupper(uniqid());
     }
+
+    public function inventory()
+    {
+        return $this->hasOne(Inventory::class);
+    }
 }

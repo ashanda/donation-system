@@ -19,10 +19,10 @@
                         <h4>
                             Roles
                             @can('create role')
-                            <a href="{{ url('roles/create') }}" class="btn btn-primary float-end">Add Role</a>
+                            <a href="{{ url('roles/create') }}" class="btn btn-primary float-end ms-2">Add Role</a>
                             @endcan
 
-                             @can('restore user')
+                             @can('restore role')
                             <a href="{{ route('roles.restoreAll') }}" class="btn btn-info float-end">Restore role</a>
                             @endcan
                         </h4>
@@ -43,9 +43,11 @@
                                     <td>{{ $role->id }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
+                                        @can('role permission')
                                         <a href="{{ url('roles/'.$role->id.'/give-permissions') }}" class="btn btn-warning">
                                             Add / Edit Role Permission
                                         </a>
+                                        @endcan
 
                                         @can('update role')
                                         <a href="{{ url('roles/'.$role->id.'/edit') }}" class="btn btn-success">

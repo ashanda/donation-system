@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -17,79 +16,116 @@ class UserRolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Permissions
-        Permission::create(['name' => 'view role']);
-        Permission::create(['name' => 'create role']);
-        Permission::create(['name' => 'update role']);
-        Permission::create(['name' => 'delete role']);
+        // Define all permissions
+        $permissions = [
+            'view role',
+            'create role',
+            'update role',
+            'delete role',
+            'restore role',
 
-        Permission::create(['name' => 'view permission']);
-        Permission::create(['name' => 'create permission']);
-        Permission::create(['name' => 'update permission']);
-        Permission::create(['name' => 'delete permission']);
+            'view permission',
+            'create permission',
+            'update permission',
+            'delete permission',
+            'restore permission',
 
-        Permission::create(['name' => 'view user']);
-        Permission::create(['name' => 'create user']);
-        Permission::create(['name' => 'update user']);
-        Permission::create(['name' => 'delete user']);
+            'view user',
+            'create user',
+            'update user',
+            'delete user',
+            'manage users',
 
-        Permission::create(['name' => 'view product']);
-        Permission::create(['name' => 'create product']);
-        Permission::create(['name' => 'update product']);
-        Permission::create(['name' => 'delete product']);
+            'view product',
+            'create product',
+            'update product',
+            'delete product',
+            'restore product',
 
+            'view inventory item',
+            'add inventory',
+            'edit / update inventory items',
+            'delete inventory item',
+            'restore inventory iteams',
+            'manage inventory',
 
-        // Create Roles
-        $superAdminRole = Role::create(['name' => 'super-admin']); //as super-admin
-        $adminRole = Role::create(['name' => 'admin']);
-        $staffRole = Role::create(['name' => 'staff']);
-        $userRole = Role::create(['name' => 'user']);
+            'create donate',
+            'update donate',
+            'delete donate',
+            'edit / update donation items',
+            'delete donation items',
+            'create donation',
 
-        // Lets give all permission to super-admin role.
-        $allPermissionNames = Permission::pluck('name')->toArray();
+            'create issue',
+            'update issue',
+            'delete issue',
+            'create good issue',
+            'edit / update good issue',
+            'delete good issue',
 
-        $superAdminRole->givePermissionTo($allPermissionNames);
+            'manage donators',
+            'manage issuers',
+            'manage products',
+        ];
 
-        // Let's give few permissions to admin role.
-        $adminRole->givePermissionTo(['create role', 'view role', 'update role']);
-        $adminRole->givePermissionTo(['create permission', 'view permission']);
-        $adminRole->givePermissionTo(['create user', 'view user', 'update user']);
-        $adminRole->givePermissionTo(['create product', 'view product', 'update product']);
+        // Create permissions
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
+        // Create roles
+        $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $donatorRole = Role::firstOrCreate(['name' => 'donator']);
+        $issuerRole = Role::firstOrCreate(['name' => 'issuer']);
+        $userRole = Role::firstOrCreate(['name' => 'user']);
 
-        // Let's Create User and assign Role to it.
+        // Assign all permissions to super-admin role
+        $superAdminRole->syncPermissions(Permission::all());
 
-        $superAdminUser = User::firstOrCreate([
-                    'email' => 'superadmin@gmail.com',
-                ], [
-                    'name' => 'Super Admin',
-                    'email' => 'superadmin@gmail.com',
-                    'password' => Hash::make ('12345678'),
-                ]);
+        // Assign specific permissions to admin role
+        $adminRole->syncPermissions([
+            'create role', 'view role', 'update role',
+            'create permission', 'view permission',
+            'create user', 'view user', 'update user',
+            'create product', 'view product', 'update product'
+        ]);
 
+        // Create users and assign roles
+        $superAdminUser = User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('12345678'),
+            ]
+        );
         $superAdminUser->assignRole($superAdminRole);
 
-
-        $adminUser = User::firstOrCreate([
-                            'email' => 'admin@gmail.com'
-                        ], [
-                            'name' => 'Admin',
-                            'email' => 'admin@gmail.com',
-                            'password' => Hash::make ('12345678'),
-                        ]);
-
+        $adminUser = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ]
+        );
         $adminUser->assignRole($adminRole);
 
+        $donatorUser = User::firstOrCreate(
+            ['email' => 'donator@gmail.com'],
+            [
+                'name' => 'Donator',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $donatorUser->assignRole($donatorRole);
 
-        $staffUser = User::firstOrCreate([
-                            'email' => 'staff@gmail.com',
-                        ], [
-                            'name' => 'Staff',
-                            'email' => 'staff@gmail.com',
-                            'password' => Hash::make('12345678'),
-                        ]);
-
-        $staffUser->assignRole($staffRole);
-    
+        $issuerUser = User::firstOrCreate(
+            ['email' => 'issuer@gmail.com'],
+            [
+                'name' => 'Issuer',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $issuerUser->assignRole($issuerRole);
     }
 }
