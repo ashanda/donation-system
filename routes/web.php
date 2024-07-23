@@ -38,7 +38,9 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware' => ['role:super-admin|admin']], function() {
 
-   
+    Route::redirect('/log-viewer', 'log-viewer', 302);
+    Route::view('/log-viewer', 'log-viewer::index');
+    
     Route::get('permissions/{permissionId}/delete', [PermissionController::class, 'destroy']);
     Route::get('permissions/restore', [PermissionController::class, 'restoreAll'])->name('permissions.restoreAll');
     Route::patch('permissions/{permissionId}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
