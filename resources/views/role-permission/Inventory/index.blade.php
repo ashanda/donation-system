@@ -10,8 +10,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>Inventory
-                            <a href="{{ route('inventories.create') }}" class="btn btn-primary float-end">Add Inventory</a>
+                            @can('add inventory')
+                            <a href="{{ route('inventories.create') }}" class="btn btn-primary float-end ms-2">Add Inventory</a>
+                            @endcan
+                            @can('restore inventory iteams')
                             <a href="{{ route('inventories.restoreItems') }}" class="btn btn-info float-end mx-2">Restore Inventory</a>
+                            @endcan
                         </h4>
                     </div>
                     <div class="card-body">
@@ -31,9 +35,13 @@
                                         <td>{{ $inventory->product->name }}</td>
                                         <td>{{ $inventory->quantity }}</td>
                                         <td>
+                                             @can('view inventory item')
                                             <a href="{{ route('inventories.show', $inventory->id) }}" class="btn btn-info">View</a>
+                                            @endcan
+                                             @can('edit / update inventory items')
                                             <a href="{{ route('inventories.edit', $inventory->id) }}" class="btn btn-success mx-2">Edit</a>
-                                             @can('delete permission')
+                                            @endcan
+                                             @can('delete inventory item')
                                                 <a href="{{ url('inventories/'.$inventory->id.'/delete') }}" class="btn btn-danger mx-2 delete-button">Delete</a>
                                              @endcan
                                             

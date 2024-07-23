@@ -7,6 +7,7 @@
     <div class="card">
         <div class="card-header">
             <h4>Issue Goods</h4>
+             <a href="{{ route('good-issues.index') }}" class="btn btn-secondary float-end">Back</a> 
         </div>
         <div class="card-body">
             <form action="{{ route('issue.store') }}" method="POST">

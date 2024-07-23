@@ -15,8 +15,12 @@
                     <div class="card mt-3">
                         <div class="card-header">
                             <h4>Products
-                                <a href="{{ route('products.create') }}" class="btn btn-primary float-end">Create Product</a>
-                                <a href="{{ route('products.restoreItems') }}" class="btn btn-info float-end mx-2">Restore All Products</a>
+                                 @can('add product')
+                                <a href="{{ route('products.create') }}" class="btn btn-primary float-end ms-2">Create Product</a>
+                                 @endcan
+                                 @can('restore product')
+                                <a href="{{ route('products.restoreItems') }}" class="btn btn-info float-end mx-2">Restore Products</a>
+                                 @endcan
                             </h4>
                         </div>
                         <div class="card-body">
@@ -39,9 +43,13 @@
                                             <td>{{ $product->description }}</td>
                                             <td>{{ $product->price }}</td>
                                             <td>
+                                                @can('view product')
                                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info">View</a>
+                                                @endcan
+                                                @can('update product')
                                                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-success mx-2">Edit</a>
-                                                @can('delete permission')
+                                                 @endcan
+                                                @can('delete product')
                                                 <a href="{{ url('products/'.$product->id.'/delete') }}" class="btn btn-danger mx-2 delete-button">Delete</a>
                                                 @endcan
                                                 

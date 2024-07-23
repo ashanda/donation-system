@@ -17,7 +17,7 @@
                     <div class="card-header">
                         <h4>Permissions
                             @can('create permission')
-                            <a href="{{ url('permissions/create') }}" class="btn btn-primary float-end">Add Permission</a>
+                            <a href="{{ url('permissions/create') }}" class="btn btn-primary float-end ms-2">Add Permission</a>
                             @endcan
                              @can('restore permission')
                             <a href="{{ route('permissions.restoreAll') }}" class="btn btn-info float-end">Restore Permission</a>
